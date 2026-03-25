@@ -1,20 +1,22 @@
 # setup-android.ps1
 # Run this script instead of 'php artisan native:install' to properly set up
-# the NativePHP Android project with the correct PHP 8.3 static libraries.
-#
+# The script fixes common issues with NativePHP Android setup by:
+# Skipping the default PHP install (which can be broken or mismatched)
+# Manually downloading the correct PHP static binaries
+# Ensuring Android SDK paths are correctly configured
 # Usage: .\setup-android.ps1
 
 $ErrorActionPreference = "Stop"
 
 $SDK_DIR = "C:\Users\Solicode\AppData\Local\Android\Sdk"
 $ANDROID_DIR = "$PSScriptRoot\nativephp\android"
-$BINARY_URL = "https://bin.nativephp.com/main/8.3/android/android-3.1.0-php8.3.30.zip"
+$BINARY_URL = "https://bin.nativephp.com/main/8.4/android/android-3.1.0-php8.4.19.zip"
 $ZIP_PATH = "$ANDROID_DIR\android.zip"
 $EXTRACT_PATH = "$ANDROID_DIR\app\src\main"
 $LOCAL_PROPS = "$ANDROID_DIR\local.properties"
 
 Write-Host ""
-Write-Host "==> Installing NativePHP for Android (PHP 8.3)" -ForegroundColor Cyan
+Write-Host "==> Installing NativePHP for Android (PHP 8.4)" -ForegroundColor Cyan
 
 # Step 1: Run native:install with --skip-php to create project skeleton only
 Write-Host ""
@@ -27,9 +29,9 @@ Write-Host "[2/4] Fixing local.properties (sdk.dir)..." -ForegroundColor Yellow
 Set-Content -Path $LOCAL_PROPS -Value "sdk.dir=$($SDK_DIR.Replace('\', '\\').Replace(':', '\:'))"
 Write-Host "      sdk.dir set to: $SDK_DIR"
 
-# Step 3: Download PHP 8.3 static libraries
+# Step 3: Download PHP 8.4 static libraries
 Write-Host ""
-Write-Host "[3/4] Downloading PHP 8.3 Android static libraries..." -ForegroundColor Yellow
+Write-Host "[3/4] Downloading PHP 8.4 Android static libraries..." -ForegroundColor Yellow
 Write-Host "      URL: $BINARY_URL"
 Invoke-WebRequest -Uri $BINARY_URL -OutFile $ZIP_PATH
 Write-Host "      Download complete. Extracting..."
